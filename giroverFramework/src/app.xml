@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<app>
+	<virsion>1.0.0</virsion>
+	<name>Girover Application</name>
+	<auth>
+		<model>auth model</model>
+		<password>password</password>
+	</auth>
+	<providers type="array">
+    	<provider>class com.girover.serviceProviders.AppServiceProvider</provider>
+    	<provider>class com.girover.serviceProviders.DBServiceProvider</provider>
+	    <provider>class com.girover.serviceProviders.AuthServiceProvider</provider>
+	</providers>
+</app>
