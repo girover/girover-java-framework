@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="672.0" stylesheets="@login.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane layoutX="93.0" layoutY="55.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <left>
+            <Pane prefHeight="400.0" prefWidth="297.0" styleClass="left-side" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="45.0" layoutY="181.0" styleClass="-fx-text-fill: white" text="Company" textFill="#eaeaea">
+                     <font>
+                        <Font size="50.0" />
+                     </font>
+                  </Label>
+                  <FontIcon iconColor="#00cfff" iconLiteral="fab-accusoft" iconSize="100" layoutX="77.0" layoutY="163.0" />
+                  <Button layoutX="19.0" layoutY="27.0" mnemonicParsing="false" styleClass="btn-close">
+                     <graphic>
+                        <FontIcon iconColor="#ffd6d6" iconLiteral="fas-times" iconSize="25" />
+                     </graphic>
+                  </Button>
+                  <Label layoutX="81.0" layoutY="252.0" text="A breif description" textFill="#ececec">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </left>
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="right-side" BorderPane.alignment="CENTER">
+               <children>
+                  <TextField layoutX="77.0" layoutY="122.0" prefHeight="40.0" prefWidth="230.0" promptText="User Name" styleClass="input">
+                     <font>
+                        <Font size="16.0" />
+                     </font></TextField>
+                  <PasswordField layoutX="77.0" layoutY="180.0" prefHeight="40.0" prefWidth="230.0" promptText="Password" styleClass="input">
+                     <font>
+                        <Font size="16.0" />
+                     </font></PasswordField>
+                  <Button graphicTextGap="8.0" layoutX="222.0" layoutY="266.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="85.0" styleClass="login-btn" text="Login">
+                     <graphic>
+                        <FontIcon iconColor="WHITE" iconLiteral="fa-sign-in" />
+                     </graphic></Button>
+                  <FontIcon fill="#006064" iconLiteral="far-user" iconSize="30" layoutX="36.0" layoutY="155.0" styleClass="icon-color-2" />
+                  <FontIcon iconLiteral="fa-key" iconSize="30" layoutX="36.0" layoutY="210.0" styleClass="icon-color-2" />
+                  <FontIcon fill="#c19999" iconLiteral="fas-unlock" iconSize="70" layoutX="155.0" layoutY="88.0" styleClass="icon-color-2" />
+               </children>
+            </Pane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

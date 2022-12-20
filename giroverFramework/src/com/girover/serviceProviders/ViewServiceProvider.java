@@ -7,7 +7,7 @@ public class ViewServiceProvider implements ServiceProviderInterface {
 
 	@Override
 	public void boot() {
-		View.setFxmlPath("/views");
+		View.setViewsPath("/gui");
 	}
 
 	@Override

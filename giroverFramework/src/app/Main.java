@@ -1,16 +1,14 @@
 package app;
 
-import com.girover.App;
-import com.girover.auth.Auth;
-import com.girover.auth.Authenticatable;
-import com.girover.database.Query;
-import com.girover.database.Row;
-import com.girover.database.eloquent.Collection;
-import com.girover.database.eloquent.Model;
+import java.io.IOException;
 
-import app.models.Student;
-import app.models.User;
+import com.girover.App;
+import com.girover.view.View;
+
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -55,28 +53,31 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 		App app = new App(new Config());
-		primaryStage.show();
-		try {
-			Auth.attempt("majed", "4321");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Authenticatable u = new User();
-		u.login("userName","majed", "4321");
-		Query q = new Query();
-		for (Row row : q.select("select * from users where userNumber=? OR userNumber>?", 2,1)) {
-			System.out.println(row);
-		}
-		
-//		System.out.println(app.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-		Student student = new Student();
-//		Student s = (Student)student.find(101);
-		Collection s = student.all();
-		System.out.println(s);
-		for (Model model : s) {
-			System.out.println(model.get("firstname"));
-		}
+//		primaryStage.show();
+
+		View view = new View(primaryStage, "Login");
+		view.show();
+//		try {
+//			Auth.attempt("majed", "4321");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		Authenticatable u = new User();
+//		u.login("userName","majed", "4321");
+//		Query q = new Query();
+//		for (Row row : q.select("select * from users where userNumber=? OR userNumber>?", 2,1)) {
+//			System.out.println(row);
+//		}
+//		
+////		System.out.println(app.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+//		Student student = new Student();
+////		Student s = (Student)student.find(101);
+//		Collection s = student.all();
+//		System.out.println(s);
+//		for (Model model : s) {
+//			System.out.println(model.get("firstname"));
+//		}
 //		System.out.println(s.courses());
 //		try {
 //			Collection students = student.all();

@@ -47,5 +47,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="D:/Java Libraries/sqljdbc_11.2.1.0_enu/sqljdbc_11.2/enu/mssql-jdbc-11.2.1.jre17.jar"/>
+	<classpathentry kind="lib" path="D:/Java Libraries/ikonli-12.3.1/ikonli-javaFx/ikonli-javafx-12.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Java Libraries/ikonli-12.3.1/ikonli-fotawesome-pack/ikonli-fontawesome-pack-12.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Java Libraries/ikonli-12.3.1/ikonli-fontawesome5-pack/ikonli-fontawesome5-pack-12.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Java Libraries/ikonli-12.3.1/ikonli-core/ikonli-core-12.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

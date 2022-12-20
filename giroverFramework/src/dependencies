@@ -1,0 +1,13 @@
+[Modulepath] : JavaFx:
+	D:\Java Libraries\javafx-sdk-19\lib
+	
+
+[Classpath] : SqlServer JCDB:
+	D:\Java Libraries\sqljdbc_11.2.1.0_enu\sqljdbc_11.2\enu\mssql-jdbc-11.2.1.jre17.jar
+
+	
+[Classpath] : ikonli-12.3.1:
+	D:\Java Libraries\ikonli-12.3.1\ikonli-core\
+	D:\Java Libraries\ikonli-12.3.1\ikonli-javaFx\
+	D:\Java Libraries\ikonli-12.3.1\ikonli-fotawesome-pack\
+	D:\Java Libraries\ikonli-12.3.1\ikonli-fontawesome5-pack

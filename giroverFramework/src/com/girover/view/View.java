@@ -4,37 +4,68 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class View {
 
-	private static String viewPath;
-	private String fxml;
+	private static String viewBasePath;
+	private String fxmlName;
 	private Stage stage;
-	
+	private Scene scene;
+
 	public View(String fxml) {
-		this.fxml = fxml;
+		this(new Stage(), fxml);
 	}
 	
-	public static void setFxmlPath(String fxmlFolderPath) {
-		viewPath = fxmlFolderPath;
+	public View(Stage stage, String fxml) {
+		this.stage = stage;
+		this.fxmlName = fxml;
+		scene = scene(fxml);
+		stage.setScene(scene);
+	}
+
+	public static void setViewsPath(String fxmlFolderPath) {
+		viewBasePath = fxmlFolderPath;
 	}
 	
-	public Pane getPage(String pageName) {
+	private URL getSceneUrl(String sceneName) {
+		
+		URL fileUrl = getClass().getResource(viewBasePath + "/" + sceneName + ".fxml");
+		
+		return fileUrl;
+	}
+
+	public Scene scene(String sceneName) {
 		try {
+
+			URL fileUrl = getSceneUrl(sceneName);
 			
-			URL fileUrl = getClass().getResource(viewPath + "/" + pageName + ".fxml");
 			if (fileUrl == null) {
 				throw new FileNotFoundException();
 			}
+
+			Pane parent = FXMLLoader.load(fileUrl);
 			
-			Pane view = FXMLLoader.load(fileUrl);
-			return view;
+			return new Scene(parent);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		
+	}
+
+	public void switchScene(String scenePath) {
+		try {
+			this.scene = scene(scenePath);
+			this.stage.setScene(this.scene);
+		} catch (Exception e) {
+			System.out.println("path error: " + scenePath);
+		}
+	}
+	
+	public void show() {
+		this.stage.show();
 	}
 }
