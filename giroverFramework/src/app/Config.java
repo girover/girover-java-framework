@@ -6,15 +6,15 @@ public class Config {
 	 * Here we store all service providers classes to boot when making new instance of
 	 * com.girover.App
 	 */
-	public Class<?>[] serviceProviders() {
+	public String[] serviceProviders() {
 
 		// Add all Service Providers you want to boot here.
-		Class<?>[] services = 
+		String[] services = 
 			{ 
-				com.girover.serviceProviders.AppServiceProvider.class,
-				com.girover.serviceProviders.DBServiceProvider.class,
-				com.girover.serviceProviders.AuthServiceProvider.class ,
-				com.girover.serviceProviders.ViewServiceProvider.class 
+				com.girover.serviceProviders.AppServiceProvider.class.getName(),
+				com.girover.serviceProviders.DBServiceProvider.class.getName(),
+				com.girover.serviceProviders.AuthServiceProvider.class.getName(),
+				com.girover.serviceProviders.ViewServiceProvider.class.getName() 
 			};
 
 		return services;

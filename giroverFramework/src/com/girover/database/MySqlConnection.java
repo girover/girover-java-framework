@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MySqlConnection implements DBConnection {
+public class MySqlConnection implements DBConnectionInterface {
 
 	protected String host = "127.0.0.1";
 	protected String port = "3306";

@@ -8,10 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class View {
+public class View extends Stage{
 
 	private static String viewBasePath;
-	private String fxmlName;
 	private Stage stage;
 	private Scene scene;
 
@@ -21,9 +20,8 @@ public class View {
 	
 	public View(Stage stage, String fxml) {
 		this.stage = stage;
-		this.fxmlName = fxml;
 		scene = scene(fxml);
-		stage.setScene(scene);
+		this.setScene(scene);
 	}
 
 	public static void setViewsPath(String fxmlFolderPath) {
@@ -65,7 +63,15 @@ public class View {
 		}
 	}
 	
-	public void show() {
-		this.stage.show();
+	public View title(String title) {
+		this.setTitle(title);
+		
+		return this;
+	}
+	
+	public View maximized() {
+		this.setMaximized(true);
+		
+		return this;
 	}
 }

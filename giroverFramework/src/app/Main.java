@@ -1,14 +1,12 @@
 package app;
 
-import java.io.IOException;
+import java.util.ArrayList;
 
 import com.girover.App;
-import com.girover.view.View;
+import com.girover.database.eloquent.Model;
 
+import app.models.User;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -53,10 +51,45 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 		App app = new App(new Config());
+		User user = new User();
+		try {
+			ArrayList<? extends Model> users =  user.query().get();
+			for (Model user2 : users) {
+				System.out.println((User)user2);
+			}
+			
+			User majed = (User) user.query().find(1);
+			
+			System.out.println("first : ");
+			System.out.println("count : "+users.size());
+			System.out.println(users.removeIf((p)->p.getTable().equals("users")));
+			System.out.println("count : "+users.size());
+			
+			System.out.println("Contains Majed : "+users.contains(majed));
+			System.out.println("is Empty : "+users.isEmpty());
+			users.clear();
+			System.out.println("is Empty : "+users.isEmpty());
+			
+			for (String model : Model.modelEvents.keySet()) {
+				System.out.println(Model.modelEvents.get(model));
+				Model.modelEvents.get(model).get("deleted").fire(majed);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+//		c.add(new Student());
+//		c.add(new User());
+//		c.add(new Course());
+		
+//		System.out.println(c.size());
+//		c.clear();
+//		System.out.println(c.size());
 //		primaryStage.show();
-
-		View view = new View(primaryStage, "Login");
-		view.show();
+//		View view = new View("Login");
+//		View view2 = new View("Login");
+//		view.title("Login Page").show();
 //		try {
 //			Auth.attempt("majed", "4321");
 //		} catch (Exception e) {

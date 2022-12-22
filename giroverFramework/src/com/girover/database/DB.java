@@ -29,7 +29,7 @@ public class DB {
 	
 	public static Connection generateNewConnection() {
 
-		DBConnection DBCon = (DBConnection)App.resolve(DBConnection.class);
+		DBConnectionInterface DBCon = (DBConnectionInterface) App.resolve(DBConnectionInterface.class.getName());
 		
 		return DBCon != null ? DBCon.getConnection() : null;
 	}

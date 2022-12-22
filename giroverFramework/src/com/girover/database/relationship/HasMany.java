@@ -1,6 +1,7 @@
 package com.girover.database.relationship;
 
-import com.girover.database.eloquent.Collection;
+import java.util.ArrayList;
+
 import com.girover.database.eloquent.Model;
 
 public class HasMany {
@@ -29,7 +30,7 @@ public class HasMany {
 		this.primaryKey = primaryKey;
 	}
 	
-	public Collection get() {
+	public ArrayList<? extends Model> get() {
 		String onePrimaryKey = one.get(primaryKey);
 		try {
 			return many.query().where(foreignKey, onePrimaryKey).get();

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import com.girover.Env;
 
-public class SqlServerConnection implements DBConnection {
+public class SqlServerConnection implements DBConnectionInterface {
 
 	private String host = "localhost";
 	private String port = "1433";

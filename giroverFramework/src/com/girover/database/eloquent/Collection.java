@@ -4,14 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class Collection implements Iterable<Model> {
 
 	private ArrayList<Model> rows = new ArrayList<>();
-
+	
 	public Collection(Model model, ResultSet result) {
-
 		try {
 			while (result.next()) {
 				Model m;

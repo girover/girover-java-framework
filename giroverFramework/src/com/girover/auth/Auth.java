@@ -1,8 +1,19 @@
 package com.girover.auth;
 
+import com.girover.App;
 import com.girover.database.eloquent.Model;
 
 public class Auth {
+	
+	// This will be executed only once
+	// When the class is loaded first time in memory.
+	static {
+		try {
+			setUserProvider((UserProviderInterface)App.make(UserProviderInterface.class.getName()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static UserProviderInterface userProvider;
 	private static Object authenticatedUser;

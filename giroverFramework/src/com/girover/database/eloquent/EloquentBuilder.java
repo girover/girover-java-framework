@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import com.girover.database.QueryBuilder;
 
+import app.models.User;
+
 public class EloquentBuilder {
 
 	private Model model;
@@ -26,6 +28,7 @@ public class EloquentBuilder {
 	private ArrayList<String[]> wheres = new ArrayList<>();
 	private ArrayList<String[]> orWheres = new ArrayList<>();
 	private ArrayList<String> selects = new ArrayList<>();
+	private ArrayList<? extends Model> arrayList;
 
 	public EloquentBuilder(Model model, QueryBuilder query) {
 		super();
@@ -61,9 +64,9 @@ public class EloquentBuilder {
 
 	public Model first() {
 		try {
-			Collection result = this.get();
-			if (result.count() > 0)
-				return result.getFirstItem();
+			ArrayList<? extends Model> result = this.get();
+			if (result.size() > 0)
+				return result.get(0);
 
 			return null;
 
@@ -83,10 +86,29 @@ public class EloquentBuilder {
 	}
 
 //
-	public Collection get() throws Exception {
+	public ArrayList<? extends Model> get() throws Exception {
 		ResultSet result = dbConnection.createStatement().executeQuery(toSql());
 
-		return new Collection(model, result);
+		return parseModels(result);
+//		return new Collection(model, result);
+	}
+	
+	private ArrayList<? extends Model> parseModels(ResultSet resultSet){
+		
+		ArrayList<Model> models = new ArrayList<>();
+		try {
+			
+			while (resultSet.next()) {
+				Model model = this.model.getClass().getDeclaredConstructor().newInstance();
+				model.setOriginalAttributes(resultSet);
+				models.add(model);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return models;
 	}
 
 //	public void select(String[] fields) {

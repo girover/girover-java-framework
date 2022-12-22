@@ -7,12 +7,11 @@ public class ViewServiceProvider implements ServiceProviderInterface {
 
 	@Override
 	public void boot() {
-		View.setViewsPath("/gui");
+		View.setViewsPath("/app/gui");
 	}
 
 	@Override
 	public void register() {
-		// TODO Auto-generated method stub
 		
 	}
 
