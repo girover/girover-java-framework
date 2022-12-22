@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import com.girover.database.DB;
 import com.girover.database.QueryBuilder;
@@ -23,28 +22,37 @@ public abstract class Model {
 	protected String primaryKey = "id";
 	protected String primaryKeyType = "int";
 	protected String foreignKey;
+	
 	// Determine if the current model exists in the database or not.
 	protected boolean exists = false;
+	
 	// The data of model as they exist in the database.
 	protected HashMap<String, String[]> originalAttributes = new HashMap<>();
+	
 	// When set new values to the model before updating the model in the database.
 	protected HashMap<String, String[]> dirtyAttributes = new HashMap<>();
+	
 	protected static Connection dbConnection;
-
+	
 	// Here we store booted Models that are called in the application.
 	protected static ArrayList<String> booted = new ArrayList<>();
+	
 	// Here we store all Model event actions.
 	// <className, <ActionName, Function>>
 	public static HashMap<String, HashMap<String, ModelEventInterface>> modelEvents = new HashMap<>();
 
 	protected EloquentBuilder query;
 
-	protected final String MODEL_EVENT_DELETING = "deleting";
-	protected final String MODEL_EVENT_DELETED = "deleted";
-	protected final String MODEL_EVENT_SAVING = "saving";
-	protected final String MODEL_EVENT_SAVED = "saved";
-	protected final String MODEL_EVENT_UPDATING = "updating";
-	protected final String MODEL_EVENT_UPDATED = "updated";
+	protected static final String MODEL_EVENT_CREATING  = "creating";
+	protected static final String MODEL_EVENT_CREATED   = "created";
+	protected static final String MODEL_EVENT_UPDATING  = "updating";
+	protected static final String MODEL_EVENT_UPDATED   = "updated";
+	protected static final String MODEL_EVENT_DELETING  = "deleting";
+	protected static final String MODEL_EVENT_DELETED   = "deleted";
+	protected static final String MODEL_EVENT_SAVING    = "saving";
+	protected static final String MODEL_EVENT_SAVED     = "saved";
+	protected static final String MODEL_EVENT_RESTORING = "restoring";
+	protected static final String MODEL_EVENT_RESTORED  = "restored";
 
 	public Model() {
 		bootIfNotBooted();
@@ -63,25 +71,68 @@ public abstract class Model {
 
 	protected void bootModel(Class<? extends Model> clazz) {
 
-		booted.add(clazz.toString());
+		registerAllModelEvents(clazz);
 
-		storeEvents(clazz);
+		booted.add(clazz.toString());
 	}
 
-	protected void storeEvents(Class<? extends Model> clazz) {
+	protected void registerAllModelEvents(Class<? extends Model> clazz) {
 		try {
 			Method bootMethod = clazz.getDeclaredMethod("boot");
+			
 			bootMethod.invoke(this);
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 
-	protected void addModelEvent(String actionName, ModelEventInterface callable) {
+	protected void registerModelEvent(String actionName, ModelEventInterface callable) {
+		
 		if (!modelEvents.containsKey(this.getClass().toString())) {
 			modelEvents.put(this.getClass().toString(), new HashMap<String, ModelEventInterface>());
 		}
+		
 		modelEvents.get(this.getClass().toString()).put(actionName, callable);
+	}
+	
+	protected void creating(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_CREATING, callback);
+	}
+	
+	protected void created(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_CREATED, callback);
+	}
+	
+	protected void updating(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_UPDATING, callback);
+	}
+	
+	protected void updated(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_UPDATED, callback);
+	}
+	
+	protected void deleting(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_DELETING, callback);
+	}
+	
+	protected void deleted(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_DELETED, callback);
+	}
+	
+	protected void saving(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_SAVING, callback);
+	}
+	
+	protected void saved(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_SAVED, callback);
+	}
+	
+	protected void restoring(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_RESTORING, callback);
+	}
+	
+	protected  void restored(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_RESTORED, callback);
 	}
 
 	public static void setConnection(Connection dbconnection) {
@@ -127,6 +178,7 @@ public abstract class Model {
 	}
 
 	private Model saveNewModel() {
+		fireSaving();
 		return query().insertModel();
 	}
 
@@ -346,27 +398,43 @@ public abstract class Model {
 		modelEvent.fire(this);
 	}
 
-	protected void fireModelDeletedEvent() {
-		fireModelEvent(MODEL_EVENT_DELETED);
-	}
-
-	protected void fireModelDeletingEvent() {
-		fireModelEvent(MODEL_EVENT_SAVED);
+	protected void fireCreating() {
+		fireModelEvent(MODEL_EVENT_CREATING);
 	}
 	
-	protected void fireModelSavingEvent() {
-		fireModelEvent(MODEL_EVENT_DELETED);
+	protected void fireCreated() {
+		fireModelEvent(MODEL_EVENT_CREATED);
 	}
 	
-	protected void fireModelSavedEvent() {
-		fireModelEvent(MODEL_EVENT_SAVED);
-	}
-	
-	protected void fireModelUpdatingEvent() {
+	protected void fireUpdating() {
 		fireModelEvent(MODEL_EVENT_UPDATING);
 	}
 	
-	protected void fireModelUpdatedEvent() {
+	protected void fireUpdated() {
 		fireModelEvent(MODEL_EVENT_UPDATED);
+	}
+	
+	protected void fireDeleted() {
+		fireModelEvent(MODEL_EVENT_DELETED);
+	}
+	
+	protected void fireDeleting() {
+		fireModelEvent(MODEL_EVENT_DELETING);
+	}
+	
+	protected void fireSaving() {
+		fireModelEvent(MODEL_EVENT_SAVING);
+	}
+	
+	protected void fireSaved() {
+		fireModelEvent(MODEL_EVENT_SAVED);
+	}
+	
+	protected void fireRestoring() {
+		fireModelEvent(MODEL_EVENT_RESTORING);
+	}
+	
+	protected void fireRestored() {
+		fireModelEvent(MODEL_EVENT_RESTORED);
 	}
 }

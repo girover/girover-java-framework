@@ -264,18 +264,18 @@ public class EloquentBuilder {
 	private String generateInsertModelSql() {
 		String sql = "INSERT INTO " + this.model.getTable() + " ( ";
 
-		int count = this.model.getOriginalAttributes().keySet().size();
+		int count = this.model.getDirtyAttributes().keySet().size();
 		int i = 0;
-		for (String attr : this.model.getOriginalAttributes().keySet()) {
+		for (String column : this.model.getDirtyAttributes().keySet()) {
 			i++;
-			sql += attr;
+			sql += column;
 			sql += i == count ? ") VALUES (" : ", ";
 		}
 		i = 0;
-		for (String attr : this.model.getOriginalAttributes().keySet()) {
+		for (String attr : this.model.getDirtyAttributes().keySet()) {
 			i++;
-			sql += "'" + this.model.get(attr);
-			sql += i == count ? "') " : "', ";
+			sql += convertDirtyAttributeToString(this.model.getWithType(attr));
+			sql += i == count ? ") " : ", ";
 		}
 
 		return sql;

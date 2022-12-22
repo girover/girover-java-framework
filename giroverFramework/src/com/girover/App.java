@@ -2,17 +2,14 @@ package com.girover;
 
 import java.sql.Connection;
 import java.util.HashMap;
-
 import com.girover.database.DB;
-import com.girover.interfaces.ServiceProviderInterface;
-
 import app.Config;
 
 public class App {
 	
 	private static Config config;
 	private static boolean isBooted = false;
-	//           <AbstractClassName|interfaceName , className>
+	//             <AbstractName , className>
 	private static HashMap<String, String> bindings;
 	//                 <ClassName|interfaceName, Object>
 	private static HashMap<String, Object> singeltones;
@@ -22,11 +19,13 @@ public class App {
 		config = configInstance;
 		bindings = new HashMap<>();
 		singeltones = new HashMap<>();
-		
-		boot();
 	}
 	
-	public void boot() {
+	public void run() {
+		bootIfNotBooted();
+	}
+	
+	private void boot() {
 		if(isBooted) {
 			return;
 		}
@@ -49,13 +48,6 @@ public class App {
 		boot();
 	}
 	
-	private void generateDBConnection() {
-		
-		bootIfNotBooted();
-		
-		DB.generateConnection();
-	}
-	
 	public Connection getDBConnection() {
 //		if(dbConnection == null)
 //			generateDBConnection();
@@ -65,7 +57,7 @@ public class App {
 		return DB.getConnection();
 	}
 	
-	public void bootAllServiceProviders() {
+	private void bootAllServiceProviders() {
 		for (String className : config.serviceProviders()) {
 			try {
 				Class<?> clazz = Class.forName(className);
@@ -76,7 +68,7 @@ public class App {
 		}
 	}
 	
-	public void registerAllServiceProviders() {
+	private void registerAllServiceProviders() {
 		for (String className : config.serviceProviders()) {
 			try {
 				Class<?> clazz = Class.forName(className);

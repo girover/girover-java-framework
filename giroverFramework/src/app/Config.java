@@ -9,7 +9,7 @@ public class Config {
 	public String[] serviceProviders() {
 
 		// Add all Service Providers you want to boot here.
-		String[] services = 
+		String[] serviceProvidersClasses = 
 			{ 
 				com.girover.serviceProviders.AppServiceProvider.class.getName(),
 				com.girover.serviceProviders.DBServiceProvider.class.getName(),
@@ -17,7 +17,7 @@ public class Config {
 				com.girover.serviceProviders.ViewServiceProvider.class.getName() 
 			};
 
-		return services;
+		return serviceProvidersClasses;
 	}
 	
 	public String basePath() {
