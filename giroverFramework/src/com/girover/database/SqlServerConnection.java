@@ -64,10 +64,13 @@ public class SqlServerConnection implements DBConnectionInterface {
 			try {
 				if(connection == null) {
 					System.out.println("Loading SqlServe JDBC ...");
-					Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");					
+					Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");	
+					System.out.println("Connecting with database : " + Env.get("DB_NAME") + "...");
 					connection = DriverManager.getConnection(generateConnectionUrl());
+					System.out.println("Connected to database : " + Env.get("DB_NAME"));
 				}
-			} catch (Exception e) {				
+			} catch (Exception e) {	
+				connection = null;
 				e.printStackTrace();
 			}
 		

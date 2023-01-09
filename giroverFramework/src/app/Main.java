@@ -15,6 +15,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		long a = System.currentTimeMillis();
 		try {
 			App app = new App(new Config());
 			app.run();
@@ -26,7 +27,8 @@ public class Main extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		long e = System.currentTimeMillis();
+		System.out.println(e-a);
 		System.exit(0);
 	}
 
@@ -57,8 +59,14 @@ public class Main extends Application {
 	
 	public static void testSavingUser() {
 		User user = new User();
-		user.set("userName", "ahmed");
+		user.set("userName", "new_user");
 		user.set("password", "54321");
 		user.save();
+	}
+	
+	public static void testRetreivedEventUser() {
+		User user = new User();
+		User majed = (User) user.find(1);
+		System.out.println(majed.get("fullName"));
 	}
 }

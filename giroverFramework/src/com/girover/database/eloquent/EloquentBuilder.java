@@ -87,6 +87,7 @@ public class EloquentBuilder {
 
 //
 	public ArrayList<? extends Model> get() throws Exception {
+		
 		ResultSet result = dbConnection.createStatement().executeQuery(toSql());
 
 		return parseModels(result);
@@ -101,6 +102,7 @@ public class EloquentBuilder {
 			while (resultSet.next()) {
 				Model model = this.model.getClass().getDeclaredConstructor().newInstance();
 				model.setOriginalAttributes(resultSet);
+				model.fireRetrieved();
 				models.add(model);
 			}
 			
@@ -207,8 +209,11 @@ public class EloquentBuilder {
 		return 1;
 	}
 
-	public Model insertModel() {
+	public Model insertCurrentModel() {
 		try {
+			// fire creating event before inserting the new model
+			this.model.fireCreating();
+			
 			Statement stm = dbConnection.createStatement();
 			int affectedRows = stm.executeUpdate(generateInsertModelSql());
 
@@ -220,6 +225,10 @@ public class EloquentBuilder {
 					String[] arr = { resultSet.getString(1), pkType };
 					this.model.setOriginalAttribute(this.model.getPrimaryKey(), arr);
 				}
+				
+				// Fire created Event
+				this.model.fireCreated();
+				
 				return this.model;
 			}
 
@@ -232,9 +241,15 @@ public class EloquentBuilder {
 
 	public Model updateCurrentModel() {
 		try {
+			// fire updating event before updating the model
+			this.model.fireUpdating();
+			
 			Statement stm = dbConnection.createStatement();
 			int affectedRows = stm.executeUpdate(generateUpdateModelSql());
 
+			// fire updated event after updating the model
+			this.model.fireUpdated();
+			
 			return this.model;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -245,13 +260,19 @@ public class EloquentBuilder {
 
 	public Model deleteCurrentModel() {
 		try {
+			// Fire deleting Event before delete current model.
+			this.model.fireDeleting();
+			
 			Statement stm = dbConnection.createStatement();
 			int affectedRows = stm.executeUpdate(generateDeleteModelSql());
 
 			if(affectedRows > 0) {
 				this.model.setExist(false);
-				this.model.dirtyAttributes = this.model.originalAttributes;
+				this.model.attributes = this.model.originalAttributes;
 				this.model.originalAttributes.clear();
+				
+				// Fire deleted Event after the model is deleted.
+				this.model.fireDeleted();
 			}
 			return this.model;
 		} catch (SQLException e) {
@@ -264,15 +285,15 @@ public class EloquentBuilder {
 	private String generateInsertModelSql() {
 		String sql = "INSERT INTO " + this.model.getTable() + " ( ";
 
-		int count = this.model.getDirtyAttributes().keySet().size();
+		int count = this.model.getAttributes().keySet().size();
 		int i = 0;
-		for (String column : this.model.getDirtyAttributes().keySet()) {
+		for (String column : this.model.getAttributes().keySet()) {
 			i++;
 			sql += column;
 			sql += i == count ? ") VALUES (" : ", ";
 		}
 		i = 0;
-		for (String attr : this.model.getDirtyAttributes().keySet()) {
+		for (String attr : this.model.getAttributes().keySet()) {
 			i++;
 			sql += convertDirtyAttributeToString(this.model.getWithType(attr));
 			sql += i == count ? ") " : ", ";
@@ -284,9 +305,9 @@ public class EloquentBuilder {
 	private String generateUpdateModelSql() {
 		String sql = "UPDATE " + this.model.getTable() + " SET ";
 
-		int count = this.model.getDirtyAttributes().keySet().size();
+		int count = this.model.getAttributes().keySet().size();
 		int i = 0;
-		for (String attr : this.model.getDirtyAttributes().keySet()) {
+		for (String attr : this.model.getAttributes().keySet()) {
 			i++;
 			if (attr.equals(this.model.getPrimaryKey()))
 				continue;

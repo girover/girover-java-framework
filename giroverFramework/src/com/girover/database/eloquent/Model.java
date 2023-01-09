@@ -17,7 +17,7 @@ import com.girover.database.QueryBuilder;
 
 public abstract class Model {
 
-	// The name of table that holds all data about the model.
+	// The name of table that holds data of the model.
 	protected String table;
 	protected String primaryKey = "id";
 	protected String primaryKeyType = "int";
@@ -30,29 +30,30 @@ public abstract class Model {
 	protected HashMap<String, String[]> originalAttributes = new HashMap<>();
 	
 	// When set new values to the model before updating the model in the database.
-	protected HashMap<String, String[]> dirtyAttributes = new HashMap<>();
+	protected HashMap<String, String[]> attributes = new HashMap<>();
 	
 	protected static Connection dbConnection;
 	
 	// Here we store booted Models that are called in the application.
 	protected static ArrayList<String> booted = new ArrayList<>();
 	
-	// Here we store all Model event actions.
-	// <className, <ActionName, Function>>
+	// Here we store all Model events.
+	// <className, <EventName, Function>>
 	public static HashMap<String, HashMap<String, ModelEventInterface>> modelEvents = new HashMap<>();
 
 	protected EloquentBuilder query;
 
-	protected static final String MODEL_EVENT_CREATING  = "creating";
-	protected static final String MODEL_EVENT_CREATED   = "created";
-	protected static final String MODEL_EVENT_UPDATING  = "updating";
-	protected static final String MODEL_EVENT_UPDATED   = "updated";
-	protected static final String MODEL_EVENT_DELETING  = "deleting";
-	protected static final String MODEL_EVENT_DELETED   = "deleted";
-	protected static final String MODEL_EVENT_SAVING    = "saving";
-	protected static final String MODEL_EVENT_SAVED     = "saved";
-	protected static final String MODEL_EVENT_RESTORING = "restoring";
-	protected static final String MODEL_EVENT_RESTORED  = "restored";
+	protected static final String MODEL_EVENT_RETRIEVED  = "retrieved";
+	protected static final String MODEL_EVENT_CREATING   = "creating";
+	protected static final String MODEL_EVENT_CREATED    = "created";
+	protected static final String MODEL_EVENT_UPDATING   = "updating";
+	protected static final String MODEL_EVENT_UPDATED    = "updated";
+	protected static final String MODEL_EVENT_DELETING   = "deleting";
+	protected static final String MODEL_EVENT_DELETED    = "deleted";
+	protected static final String MODEL_EVENT_SAVING     = "saving";
+	protected static final String MODEL_EVENT_SAVED      = "saved";
+	protected static final String MODEL_EVENT_RESTORING  = "restoring";
+	protected static final String MODEL_EVENT_RESTORED   = "restored";
 
 	public Model() {
 		bootIfNotBooted();
@@ -86,13 +87,17 @@ public abstract class Model {
 		}
 	}
 
-	protected void registerModelEvent(String actionName, ModelEventInterface callable) {
+	protected void registerModelEvent(String eventName, ModelEventInterface callable) {
 		
 		if (!modelEvents.containsKey(this.getClass().toString())) {
 			modelEvents.put(this.getClass().toString(), new HashMap<String, ModelEventInterface>());
 		}
 		
-		modelEvents.get(this.getClass().toString()).put(actionName, callable);
+		modelEvents.get(this.getClass().toString()).put(eventName, callable);
+	}
+	
+	protected void retrieved(ModelEventInterface callback) {
+		registerModelEvent(MODEL_EVENT_RETRIEVED, callback);
 	}
 	
 	protected void creating(ModelEventInterface callback) {
@@ -178,8 +183,7 @@ public abstract class Model {
 	}
 
 	private Model saveNewModel() {
-		fireSaving();
-		return query().insertModel();
+		return query().insertCurrentModel();
 	}
 
 	private Model saveExistedModel() {
@@ -187,6 +191,7 @@ public abstract class Model {
 	}
 
 	public Model delete() {
+		
 		return query().deleteCurrentModel();
 	}
 
@@ -264,7 +269,7 @@ public abstract class Model {
 	}
 
 	public void set(String key, String[] value) {
-		this.dirtyAttributes.put(key, value);
+		this.attributes.put(key, value);
 	}
 
 	public void set(String key, String value) {
@@ -301,8 +306,8 @@ public abstract class Model {
 		return originalAttributes;
 	}
 
-	public Map<String, String[]> getDirtyAttributes() {
-		return dirtyAttributes;
+	public Map<String, String[]> getAttributes() {
+		return attributes;
 	}
 
 	public void setAttributes(HashMap<String, String[]> attributes) {
@@ -347,7 +352,7 @@ public abstract class Model {
 	}
 
 	public String get(String key) {
-		String[] arr = dirtyAttributes.get(key);
+		String[] arr = attributes.get(key);
 		if (arr != null)
 			return arr[0]; // get value from new entered values
 
@@ -359,7 +364,7 @@ public abstract class Model {
 	}
 
 	public String[] getWithType(String key) {
-		String[] arr = dirtyAttributes.get(key);
+		String[] arr = attributes.get(key);
 		if (arr != null)
 			return arr; // get value from new entered values
 
@@ -370,6 +375,7 @@ public abstract class Model {
 		return null;
 	}
 
+	@Override
 	public String toString() {
 		String str = "";
 
@@ -398,6 +404,10 @@ public abstract class Model {
 		modelEvent.fire(this);
 	}
 
+	protected void fireRetrieved() {
+		fireModelEvent(MODEL_EVENT_RETRIEVED);
+	}
+	
 	protected void fireCreating() {
 		fireModelEvent(MODEL_EVENT_CREATING);
 	}

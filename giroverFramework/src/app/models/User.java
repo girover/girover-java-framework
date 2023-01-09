@@ -14,6 +14,10 @@ public class User extends Model implements Authenticatable {
 		
 		super.boot();
 		
+		retrieved(model -> model.set("fullName", model.get("userName").toUpperCase()+" - "+model.get("password")));
+
+		creating(model -> model.set("userName", model.get("userName").toUpperCase()));
+		
 		saving(model -> model.set("userName", model.get("userName").toUpperCase()));
 		
 		saved(model -> model.query().where("lastname","farhan"));
